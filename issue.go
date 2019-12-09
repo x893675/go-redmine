@@ -303,8 +303,9 @@ func getOneIssue(c *Client, id int, args map[string]string) (*Issue, error) {
 	return &r.Issue, nil
 }
 
-func getIssue(c *Client, url string, offset int) (*issuesResult, error) {
-	res, err := c.Get(c.endpoint + url + "&offset=" + strconv.Itoa(offset))
+func getIssue(c *Client, url string) (*issuesResult, error) {
+	//res, err := c.Get(c.endpoint + url + "&offset=" + strconv.Itoa(offset))
+	res, err := c.Get(c.endpoint + url)
 
 	if err != nil {
 		return nil, err
@@ -330,22 +331,27 @@ func getIssue(c *Client, url string, offset int) (*issuesResult, error) {
 }
 
 func getIssues(c *Client, url string) ([]Issue, error) {
-	completed := false
-	var issues []Issue
-
-	for completed == false {
-		r, err := getIssue(c, url, len(issues))
-
-		if err != nil {
-			return nil, err
-		}
-
-		if r.TotalCount == uint(len(issues)) {
-			completed = true
-		}
-
-		issues = append(issues, r.Issues...)
+	//completed := false
+	//var issues []Issue
+	r, err := getIssue(c, url)
+	if err != nil {
+		return nil, err
 	}
-
-	return issues, nil
+	return r.Issues,nil
+	//
+	//for completed == false {
+	//	r, err := getIssue(c, url, len(issues))
+	//
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//
+	//	if r.TotalCount == uint(len(issues)) {
+	//		completed = true
+	//	}
+	//
+	//	issues = append(issues, r.Issues...)
+	//}
+	//
+	//return issues, nil
 }
